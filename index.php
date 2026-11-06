@@ -8,6 +8,7 @@ include('parties-communes/entete.php');
 /**@var stdClass $_ */
 ?>
 <main class="page-accueil">
+	TEST DEVCONTAINER
 	<article class="amorce">
 		<h1><?= $_->amorceTitre ?></h1>
 		<h2><?= $_->amorceSousTitre ?></h2>

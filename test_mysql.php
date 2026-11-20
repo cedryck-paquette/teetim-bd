@@ -22,8 +22,8 @@
     <!-- Étape 4 :  Utiliser la réponse pour l'afficher dans une page Web -->
     <h2>Les 10 premiers produits (nom et prix seulements)</h2>
     <ul>
-        <?php while($unPrd = $resultatRequete->fetch_assoc()) : ?>
-            <li><?= $unPrd['nom']; ?> (<?= $unPrd['prix']; ?>) </li>
+        <?php while($unPrd = $resultatRequete->fetch_object()) : ?>
+            <li><?= $unPrd->nom; ?> (<?= $unPrd->prix; ?>) </li>
         <?php endwhile; ?>
     </ul>
 </body>

@@ -12,9 +12,11 @@ include('parties-communes/entete.php');
  */
 // Gérer l'interactivité de filtre et de tri
 // Capturer la saisie de l'utilisateur (defaut = aleatoire)
-$tri = (isset($_GET['tri'])) ? $_GET['tri'] : 'aleatoire';
+$tri = $_GET['tri'] ?? 'aleatoire';
+$filtre = $_GET['filtre'] ?? 'tous';
 
-[$themes, $produits] = obtenirCatalogue($page, $langue, $tri);
+$themes = obtenirThemes();
+$produits = obtenirProduits($page, $tri, $filtre);
 
 // Formatteur des montants d'argent 
 $formatteurMontants = new NumberFormatter($langue, NumberFormatter::CURRENCY);
@@ -29,8 +31,8 @@ $formatteurMontants = new NumberFormatter($langue, NumberFormatter::CURRENCY);
 				<select name="filtre" id="filtre">
 					<option value="tous">Tous les produits</option>
 					<!--Gabarit option thème-->
-					<?php foreach ($themes as $codeTheme => $nomTheme) : ?>
-						<option value="<?= $codeTheme; ?>"><?= $nomTheme; ?></option>
+					<?php foreach ($themes as $theme) : ?>
+						<option value="<?= $theme->id; ?>"><?= $theme->nom; ?></option>
 					<?php endforeach; ?>
 
 				</select>

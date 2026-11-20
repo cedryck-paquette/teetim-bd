@@ -3,82 +3,31 @@
 /************************************************Librairie de code pour gérer le catalogue des produits **************************************************************/
 
 /**
- * Retourne les thèmes et les produits de la catégorie demandée
- * @param string $categorie Catégorie de produits (ex.:T-shirts, casquettes, etc.)
- * @param string $codeLangue Code en 2 lettres de la langue d'affichage.
- * @param string $critereTri Valeur du critère de tri.
- * @return array Tableau contenant les deux tableaux des thèmes et des produits.
+ * Retourne les thèmes
+ * @return array Tableau contenant des objets représentants les thèmes
  */
-function obtenirCatalogue($categorie, $codeLangue, $critereTri)
+function obtenirThemes()
 {
-    $catalogue = json_decode(file_get_contents("data/$categorie.json"));
+    $cnx = new mysqli('db', 'teetim', 'teetim', 'teetim');
+    $resultat = $cnx->query("SELECT * FROM theme");
+    // return $resultat->fetch_all(MYSQLI_ASSOC);
+
     $themes = [];
-    $produits = [];
-
-    foreach ($catalogue as $codeTheme => $detailTheme) {
-        $themes[$codeTheme] = $detailTheme->theme->$codeLangue;
-        $produits = array_merge($produits, $detailTheme->produits);
+    while($uneLigne = $resultat->fetch_object()) {
+        $themes[] = $uneLigne;
     }
-
-    // Trier le tableau produit avant de le retourner
-    if (function_exists($critereTri)) {
-        usort($produits, $critereTri);
-    } else {
-        shuffle($produits);
-    }
-
-
-    return [$themes, $produits];
+    return $themes;
 }
 
-/**
- * Fonction de comparaison des nombres de ventes descendants.
- * @param stdClass $produit1 Objet correspondant au premier produit à comparer.
- * @param stdClass $produit2 Objet correspondant au deuxième produit à comparer.
- * @return int Nombre entier positif, négatif ou 0 selon la comparaison.
- */
-function ventesDesc($produit1, $produit2)
-{
-    return 100 * $produit2->ventes - 100 * $produit1->ventes;
-}
 
 /**
- * Fonction de comparaison des prix ascendants des produits.
- * @param stdClass $produit1 Objet correspondant au premier produit à comparer.
- * @param stdClass $produit2 Objet correspondant au deuxième produit à comparer.
- * @return int Nombre entier positif, négatif ou 0 selon la comparaison.
+ * Retourne les produits de la catégorie demandée
+ * @param string $categorie Catégorie de produits (ex.:T-shirts, casquettes, etc.)
+ * @param string $critereTri Valeur du critère de tri.
+ * @param string $critereFiltre Valeur du critère de filtre.
+ * @return array Tableau contenant des objets représentants les produits.
  */
-function prixAsc($produit1, $produit2)
+function obtenirProduits($categorie, $critereTri, $critereFiltre)
 {
-    return 100 * $produit1->prix - 100 * $produit2->prix;
-}
-
-/**
- * Fonction de comparaison des prix descendants des produits.
- * @param stdClass $produit1 Objet correspondant au premier produit à comparer.
- * @param stdClass $produit2 Objet correspondant au deuxième produit à comparer.
- * @return int Nombre entier positif, négatif ou 0 selon la comparaison.
- */
-function prixDesc($produit1, $produit2)
-{
-    return 100 * $produit2->prix - 100 * $produit1->prix;
-}
-
-function nomDesc() {}
-
-/**
- * Fonction de comparaison des dates d'ajout au catalogue en ordre descendant.
- * @param stdClass $produit1 Objet correspondant au premier produit à comparer.
- * @param stdClass $produit2 Objet correspondant au deuxième produit à comparer.
- * @return int Nombre entier positif, négatif ou 0 selon la comparaison.
- */
-function dateAjout($produit1, $produit2)
-{
-    if ($produit2->dac > $produit1->dac) {
-        return 1;
-    } else if ($produit2->dac < $produit1->dac) {
-        return -1;
-    } else {
-        return 0;
-    }
+    return [];
 }

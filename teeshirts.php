@@ -12,11 +12,11 @@ include('parties-communes/entete.php');
  */
 // Gérer l'interactivité de filtre et de tri
 // Capturer la saisie de l'utilisateur (defaut = aleatoire)
-$tri = $_GET['tri'] ?? 'aleatoire';
+$tri = $_GET['tri'] ?? 'RAND()';
 $filtre = $_GET['filtre'] ?? 'tous';
 
 $themes = obtenirThemes();
-$produits = obtenirProduits($page, $tri, $filtre);
+$produits = obtenirProduits(1, $tri, $filtre);
 
 // Formatteur des montants d'argent 
 $formatteurMontants = new NumberFormatter($langue, NumberFormatter::CURRENCY);
@@ -32,7 +32,10 @@ $formatteurMontants = new NumberFormatter($langue, NumberFormatter::CURRENCY);
 					<option value="tous">Tous les produits</option>
 					<!--Gabarit option thème-->
 					<?php foreach ($themes as $theme) : ?>
-						<option value="<?= $theme->id; ?>"><?= $theme->nom; ?></option>
+						<option value="<?= $theme->id; ?>">
+							<?= $filtre == $theme->id ? "selected" : "" ; ?>
+							<?= $theme->nom; ?>
+						</option>
 					<?php endforeach; ?>
 
 				</select>
@@ -40,13 +43,13 @@ $formatteurMontants = new NumberFormatter($langue, NumberFormatter::CURRENCY);
 			<div class="tri">
 				<label for="tri">Trier par : </label>
 				<select name="tri" id="tri">
-					<option <?= ($tri == 'aleatoire') ? ' selected ' : ''; ?> value="aleatoire">Aléatoire</option>
-					<option <?= ($tri == 'ventesDesc') ? ' selected ' : ''; ?> value="ventesDesc">Meilleur vendeur</option>
-					<option <?= ($tri == 'prixAsc') ? ' selected ' : ''; ?> value="prixAsc">Prix / ascendant</option>
-					<option <?= ($tri == 'prixDesc') ? ' selected ' : ''; ?> value="prixDesc">Prix / descendant</option>
-					<option <?= ($tri == 'nomAsc') ? ' selected ' : ''; ?> value="nomAsc">Alpha / ascendant</option>
-					<option <?= ($tri == 'nomDesc') ? ' selected ' : ''; ?> value="nomDesc">Alpha / descendant</option>
-					<option <?= ($tri == 'dateAjout') ? ' selected ' : ''; ?> value="dateAjout">Nouveauté</option>
+					<option <?= ($tri == 'RAND()') ? ' selected ' : ''; ?> value="RAND()">Aléatoire</option>
+					<option <?= ($tri == 'ventes DESC') ? ' selected ' : ''; ?> value="ventes DESC">Meilleur vendeur</option>
+					<option <?= ($tri == 'prix ASC') ? ' selected ' : ''; ?> value="prix ASC">Prix / ascendant</option>
+					<option <?= ($tri == 'prix DESC') ? ' selected ' : ''; ?> value="prix DESC">Prix / descendant</option>
+					<option <?= ($tri == 'nom ASC') ? ' selected ' : ''; ?> value="nom ASC">Alpha / ascendant</option>
+					<option <?= ($tri == 'nom DESC') ? ' selected ' : ''; ?> value="nom DESC">Alpha / descendant</option>
+					<option <?= ($tri == 'dac DESC') ? ' selected ' : ''; ?> value="dac DESC">Nouveauté</option>
 				</select>
 			</div>
 		</form>
@@ -56,9 +59,9 @@ $formatteurMontants = new NumberFormatter($langue, NumberFormatter::CURRENCY);
 		<?php foreach ($produits as $prd) : ?>
 			<div class="produit">
 				<span class="image">
-					<img src="images/produits/teeshirts/<?= $prd->id; ?>.webp" alt="<?= $prd->nom->$langue; ?>">
+					<img src="images/produits/teeshirts/<?= $prd->fichier_image; ?>" alt="<?= $prd->nom; ?>">
 				</span>
-				<span class="nom"><?= $prd->nom->$langue; ?></span>
+				<span class="nom"><?= $prd->nom; ?></span>
 				<span class="prix"><?= $formatteurMontants->formatCurrency($prd->prix, 'CAD'); ?></span>
 			</div>
 		<?php endforeach; ?>

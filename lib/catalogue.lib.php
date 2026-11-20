@@ -29,5 +29,13 @@ function obtenirThemes()
  */
 function obtenirProduits($categorie, $critereTri, $critereFiltre)
 {
-    return [];
+    $cnx = new mysqli('db', 'teetim', 'teetim', 'teetim');
+    $clauseWhere = $critereFiltre === "tous" ? "tous" : "WHERE thm_id = $critereFiltre";
+    $sql = "SELECT * FROM produit $clauseWhere ORDER BY $critereTri";
+    $resultat = $cnx->query($sql);
+    $produits = [];
+    while($prod = $resultat->fetch_object()){
+        $produits[] = $prod;
+    }
+    return $produits;
 }
